@@ -1,0 +1,43 @@
+body{
+    background:#f5f7fb;
+}
+
+.card{
+    transition:0.3s ease;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 12px 30px rgba(0,0,0,0.2);
+}
+
+.btn{
+    transition:0.3s ease;
+}
+
+.btn:hover{
+    transform:scale(1.05);
+}
+
+.navbar{
+    background:linear-gradient(to right,#7ba9ef,#c1a5ee);
+}
+
+.table{
+    border-radius:15px;
+    overflow:hidden;
+}
+
+h2{
+    font-weight:bold;
+}
+.btn-purple{
+    background-color:#6f42c1;
+    color:white;
+    border:none;
+}
+
+.btn-purple:hover{
+    background-color:#5a32a3;
+    color:white;
+}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}View Budget{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2 class="mb-4 text-center">
+        💰 Current Budget
+    </h2>
+
+    {% if budget %}
+
+    <div class="card shadow mx-auto" style="max-width:500px;">
+
+        <div class="card-body text-center">
+
+            <h4 class="mb-3">
+                📅 Month : {{ budget[0] }}
+            </h4>
+
+            <h4 class="mb-3">
+                📆 Year : {{ budget[1] }}
+            </h4>
+
+            <h2 class="text-success mb-4">
+                ₹ {{ budget[2] }}
+            </h2>
+
+            <a href="/set-budget" class="btn btn-warning">
+                ✏️ Update Budget
+            </a>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="alert alert-warning text-center">
+
+        <h4>No Budget Set Yet.</h4>
+
+        <a href="/set-budget" class="btn btn-primary mt-3">
+            Set Budget
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,669 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<h2 class="mb-4">
+    Welcome Back, {{ session["user_name"] }} 👋
+</h2>
+
+
+<p class="text-muted mb-4">
+
+    📅 Today: {{ today }}
+
+</p>
+
+
+<p class="text-muted">
+
+    🕒 Current Time:
+    <span id="clock"></span>
+
+</p>
+
+
+
+{% if total_income == 0 and total_expense == 0 %}
+
+<div class="alert alert-info text-center">
+    <strong>Welcome!</strong>
+    <br><br>
+    Start by adding your income and expenses.
+</div>
+
+{% endif %}
+
+<!-- ================= Dashboard Cards ================= -->
+
+<div class="row g-4">
+
+    <!-- Income -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow-lg border-0 rounded-4 text-center h-100">
+
+            <div class="card-body">
+
+                <h5>💰 Total Income</h5>
+
+                <h2 class="text-success">
+
+                    ₹ {{ total_income }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Expense -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow-lg border-0 rounded-4 text-center h-100">
+
+            <div class="card-body">
+
+                <h5>💸 Total Expense</h5>
+
+                <h2 class="text-danger">
+
+                    ₹ {{ total_expense }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Balance -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow-lg border-0 rounded-4 text-center h-100">
+
+            <div class="card-body">
+
+                <h5>🏦 Balance</h5>
+
+                <h2 class="text-primary">
+
+                    ₹ {{ balance }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Budget -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow-lg border-0 rounded-4 text-center h-100">
+
+            <div class="card-body">
+
+                <h5>🎯 Budget</h5>
+
+                <h2 class="text-warning">
+
+                    ₹ {{ budget }}
+
+                </h2>
+
+                <div class="progress mt-3">
+
+                    <div class="progress-bar {{ progress_color }}"
+                        role="progressbar"
+                        style="width: {{ budget_percentage }}%;"
+                        aria-valuenow="{{ budget_percentage }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100">
+
+                        {{ budget_percentage }}%
+
+                    </div>
+
+                </div>
+
+                <small class="text-muted">
+
+                    Budget Used
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- AI Prediction -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow-lg border-0 rounded-4 text-center h-100">
+
+            <div class="card-body">
+
+                <h5>🤖 AI Prediction</h5>
+
+                <h2 class="text-info">
+
+                    ₹ {{ predicted_expense }}
+
+                </h2>
+
+                <small class="text-muted">
+
+                    Next Month Prediction
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Transactions -->
+
+    <div class="col-lg-3 col-md-6">
+
+        <div class="card shadow-lg border-0 rounded-4 text-center h-100">
+
+            <div class="card-body">
+
+                <h5>📋 Transactions</h5>
+
+                <h2 class="text-secondary">
+
+                    {{ recent_transactions|length }}
+
+                </h2>
+
+                <small class="text-muted">
+
+                    Recent Records
+
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<hr class="my-5">
+
+<!-- ================= Smart Alerts ================= -->
+
+<div class="alert alert-info text-center">
+
+    <strong>🤖 Smart Insight</strong>
+
+    <br><br>
+
+    {{ insight }}
+
+</div>
+
+<div class="alert alert-primary text-center">
+
+    <strong>📌 Budget Status</strong>
+
+    <br><br>
+
+    {{ budget_status }}
+
+</div>
+
+{% if anomaly %}
+
+<div class="alert alert-danger text-center">
+
+    <strong>🚨 AI Anomaly Detection</strong>
+
+    <br><br>
+
+    {{ anomaly }}
+
+</div>
+
+{% endif %}
+
+<div class="alert alert-success text-center">
+
+    <strong>📊 Spending Analysis</strong>
+
+    <br><br>
+
+    Highest Spending Category :
+
+    <strong>{{ top_category }}</strong>
+
+</div>
+
+<hr class="my-5">
+<!-- ================= Quick Actions ================= -->
+
+<h3 class="mb-4">Quick Actions</h3>
+
+<div class="row g-3">
+
+    <div class="col-lg-3 col-md-6">
+        <a href="/add-income"
+           class="btn btn-success rounded-pill w-100 p-4">
+
+            💰<br><br>
+
+            Add Income
+
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <a href="/add-expense"
+           class="btn btn-danger rounded-pill w-100 p-4">
+
+            💸<br><br>
+
+            Add Expense
+
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <a href="/view-income"
+           class="btn btn-primary rounded-pill w-100 p-4">
+
+            📈<br><br>
+
+            View Income
+
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <a href="/view-expenses"
+           class="btn btn-dark rounded-pill w-100 p-4">
+
+            📋<br><br>
+
+            View Expenses
+
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <a href="/set-budget"
+           class="btn btn-warning rounded-pill w-100 p-4">
+
+            🎯<br><br>
+
+            Set Budget
+
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <a href="/view-budget"
+           class="btn btn-secondary rounded-pill w-100 p-4">
+
+            📊<br><br>
+
+            View Budget
+
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <a href="/export-expenses"
+           class="btn btn-info rounded-pill w-100 p-4">
+
+            📥<br><br>
+
+            Export CSV
+
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-6">
+    <a href="/export-pdf"
+   class="btn btn-purple rounded-pill w-100 p-4">
+
+    📄<br><br>
+
+    Export PDF
+
+    </a>
+
+    </div>
+
+</div>
+
+<hr class="my-5">
+
+<!-- ================= Charts ================= -->
+
+{% if labels %}
+
+<div class="row g-4">
+
+    <!-- Pie Chart -->
+
+    <div class="col-lg-6">
+
+        <div class="card shadow-lg border-0 rounded-4 h-100">
+
+            <div class="card-body text-center">
+
+                <h4 class="mb-4">
+
+                    Expense Category Analysis
+
+                </h4>
+
+                <div style="height:320px; width:320px; margin:auto;">
+
+                    <canvas id="expenseChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Line Chart -->
+
+    <div class="col-lg-6">
+
+        <div class="card shadow-lg border-0 rounded-4 h-100">
+
+            <div class="card-body text-center">
+
+                <h4 class="mb-4">
+
+                    Monthly Expense Trend
+
+                </h4>
+
+                <div style="height:320px; width:320px; margin:auto;">
+
+                    <canvas id="monthlyChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% else %}
+
+<div class="alert alert-warning text-center">
+
+    No Expense Data Available.
+
+</div>
+
+{% endif %}
+
+<hr class="my-5">
+<!-- ================= Recent Transactions ================= -->
+
+<h3 class="mb-4">
+
+    Recent Transactions
+
+</h3>
+
+<div class="card shadow-lg border-0 rounded-4">
+
+    <div class="card-body">
+
+        <table class="table table-hover table-striped align-middle">
+
+            <thead class="table-dark">
+
+                <tr>
+
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Date</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% if recent_transactions %}
+
+                {% for transaction in recent_transactions %}
+
+                <tr>
+
+                    <td>{{ transaction[0] }}</td>
+
+                    <td class="text-danger">
+
+                        ₹ {{ transaction[1] }}
+
+                    </td>
+
+                    <td>{{ transaction[2] }}</td>
+
+                    <td>{{ transaction[3] }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            {% else %}
+
+                <tr>
+
+                    <td colspan="4" class="text-center text-muted">
+
+                        No Transactions Found
+
+                    </td>
+
+                </tr>
+
+            {% endif %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<hr>
+
+<footer class="text-center text-muted mt-4 mb-3">
+
+    <p>
+
+        © 2026 AI Powered Smart Expense Tracker
+
+    </p>
+
+    <small>
+
+        Developed using Flask • PostgreSQL • Python • Machine Learning
+
+    </small>
+
+</footer>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ================= PIE CHART =================
+
+    const labels = {{ labels | tojson }};
+    const values = {{ values | tojson }};
+
+    const pieCtx = document.getElementById("expenseChart");
+
+    if (pieCtx) {
+
+        new Chart(pieCtx, {
+
+            type: "pie",
+
+            data: {
+
+                labels: labels,
+
+                datasets: [{
+
+                    data: values,
+
+                    backgroundColor: [
+
+                        "#36A2EB",
+                        "#FF6384",
+                        "#4BC0C0",
+                        "#FFCE56",
+                        "#9966FF",
+                        "#FF9F40",
+                        "#8BC34A",
+                        "#E91E63"
+
+                    ]
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+
+                        position: "bottom"
+
+                    }
+
+                }
+
+            }
+
+        });
+
+    }
+
+    // ================= LINE CHART =================
+
+    const monthLabels = {{ month_labels | tojson }};
+    const monthValues = {{ month_values | tojson }};
+
+    const lineCtx = document.getElementById("monthlyChart");
+
+    if (lineCtx) {
+
+        new Chart(lineCtx, {
+
+            type: "line",
+
+            data: {
+
+                labels: monthLabels,
+
+                datasets: [{
+
+                    label: "Monthly Expenses",
+
+                    data: monthValues,
+
+                    borderColor: "#36A2EB",
+
+                    backgroundColor: "rgba(54,162,235,0.2)",
+
+                    fill: true,
+
+                    tension: 0.4
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false
+
+            }
+
+        });
+
+    }
+
+});
+
+function updateClock(){
+
+    const now = new Date();
+
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+
+    hours = String(hours).padStart(2,"0");
+    minutes = String(minutes).padStart(2,"0");
+    seconds = String(seconds).padStart(2,"0");
+
+    document.getElementById("clock").innerHTML =
+        hours + ":" + minutes + ":" + seconds + " " + ampm;
+
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+</script>
+
+{% endblock %}
