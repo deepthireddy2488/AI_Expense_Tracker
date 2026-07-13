@@ -101,6 +101,27 @@ def get_monthly_expense(user_id):
 
 
 
+def get_budget(user_id):
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT COALESCE(MAX(budget_amount),0)
+        FROM budgets
+        WHERE user_id=%s
+    """, (user_id,))
+
+    budget = cursor.fetchone()[0]
+
+    cursor.close()
+    connection.close()
+
+    return budget
+
+
+
+
 def get_budget_details(user_id):
 
     connection = get_connection()
@@ -372,35 +393,4 @@ def save_prediction(user_id, predicted_expense):
 
     cursor.close()
     connection.close()
-
-
-def get_budget_details(user_id):
-
-    connection = get_connection()
-    cursor = connection.cursor()
-
-    cursor.execute("""
-        SELECT
-            month,
-            year,
-            budget_amount
-        FROM budgets
-        WHERE user_id=%s
-        ORDER BY budget_id DESC
-        LIMIT 1
-    """, (user_id,))
-
-    budget = cursor.fetchone()
-
-    cursor.close()
-    connection.close()
-
-    return budget
-
-
-
-
-
-
-
 
