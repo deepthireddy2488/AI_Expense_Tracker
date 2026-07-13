@@ -360,7 +360,7 @@ def predict_next_month_expense(user_id):
 
 
 
-from datetime import datetime
+
 
 def save_prediction(user_id, predicted_expense):
 

@@ -422,7 +422,6 @@ def delete_income_route(income_id):
 
 
 
-
 @app.route("/set-budget", methods=["GET", "POST"])
 def set_budget_page():
 
@@ -435,22 +434,23 @@ def set_budget_page():
         year = request.form["year"]
         budget_amount = request.form["budget_amount"]
 
-        print("Budget Entered =", budget_amount)
+        print("========== SET BUDGET ==========")
+        print("User ID:", session["user_id"])
+        print("Month:", month)
+        print("Year:", year)
+        print("Budget:", budget_amount)
+        print("================================")
 
         set_budget(
             session["user_id"],
             month,
             year,
             budget_amount
-            )
-
-       
+        )
 
         return redirect(url_for("view_budget"))
 
     return render_template("budget/set_budget.html")
-
-
 
 
 @app.route("/view-budget")
@@ -460,6 +460,10 @@ def view_budget():
         return redirect(url_for("login"))
 
     budget = get_budget_details(session["user_id"])
+
+    print("========== VIEW BUDGET ==========")
+    print("Budget from DB:", budget)
+    print("=================================")
 
     return render_template(
         "budget/view_budget.html",
