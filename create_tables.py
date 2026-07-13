@@ -67,6 +67,51 @@ VALUES
 ON CONFLICT (category_name) DO NOTHING;
 """)
 
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS budgets (
+    budget_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    month INT NOT NULL,
+    year INT NOT NULL,
+    budget_amount DECIMAL(10,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_budget_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+);
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS predictions (
+    prediction_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    prediction_month INT NOT NULL,
+    prediction_year INT NOT NULL,
+    predicted_expense DECIMAL(10,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_prediction_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+);
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS insights (
+    insight_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    insight_text TEXT NOT NULL,
+    generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_insight_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+);
+""")
 
 connection.commit()
 
