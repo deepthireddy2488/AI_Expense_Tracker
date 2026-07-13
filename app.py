@@ -43,7 +43,11 @@ from utils.pdf_generator import generate_expense_pdf
 from models.expense_model import get_all_expenses
 from flask import send_file
 import os
+from database.db import get_connection
 
+conn = get_connection()
+print("Connected Database:", conn.get_dsn_parameters()["dbname"])
+conn.close()
 
 
 
